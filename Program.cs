@@ -61,14 +61,29 @@ namespace WindowsProg_A4
                     return;
             }
 
+            int maxFileSize = 0;
+            Int32.TryParse(args[1], out maxFileSize);
+
             List<Task> writingTasks = new List<Task>();
             for (int i = 0; i < 25; i++)
             {
                 writingTasks.Add(WriteToFile(args[0]));
             }
+
+            await CheckFileSize(maxFileSize);
+
+            await Task.WhenAll(writingTasks);
         }
 
+        static async Task CheckFileSize(int maxFileSize)
+        {
+            bool maxSizeReached = false;
 
+            while (!maxSizeReached)
+            {
+                await Task.Delay(100);
+            }
+        }
 
         static async Task WriteToFile(string fileName)
         {

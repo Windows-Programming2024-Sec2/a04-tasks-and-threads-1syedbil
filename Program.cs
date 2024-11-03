@@ -80,6 +80,8 @@ namespace WindowsProg_A4
                 {
                     writingTasks.Add(WriteToFile(args[0]));
                 }
+
+                await Task.WhenAll(writingTasks);
             }
 
             await fileSizeTask;

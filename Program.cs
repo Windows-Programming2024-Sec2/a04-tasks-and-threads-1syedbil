@@ -28,7 +28,7 @@ namespace WindowsProg_A4
                     {
                         try
                         {
-                            File.CreateText(args[0]);
+                            using (File.CreateText(args[0])) { }
                         }
                         catch (IOException e)
                         {
@@ -64,24 +64,43 @@ namespace WindowsProg_A4
             int maxFileSize = 0;
             Int32.TryParse(args[1], out maxFileSize);
 
-            List<Task> writingTasks = new List<Task>();
-            for (int i = 0; i < 25; i++)
+            Task fileSizeTask = CheckFileSize(args[0], maxFileSize);
+
+            while (!fileSizeTask.IsCompleted)
             {
-                writingTasks.Add(WriteToFile(args[0]));
+                FileInfo file = new FileInfo(args[0]);
+                List<Task> writingTasks = new List<Task>();
+
+                if (file.Length >= maxFileSize)
+                {
+                    break;
+                }
+
+                for (int i = 0; i < 25; i++)
+                {
+                    writingTasks.Add(WriteToFile(args[0]));
+                }
             }
 
-            await CheckFileSize(maxFileSize);
-
-            await Task.WhenAll(writingTasks);
+            await fileSizeTask;
         }
 
-        static async Task CheckFileSize(int maxFileSize)
+        static async Task CheckFileSize(string fileName, int maxFileSize)
         {
             bool maxSizeReached = false;
 
             while (!maxSizeReached)
             {
                 await Task.Delay(100);
+
+                FileInfo file = new FileInfo(fileName);
+                Console.WriteLine("Current File Size: " + file.Length);
+
+                if (file.Length >= maxFileSize)
+                {
+                    Console.WriteLine("Final File Size: " + file.Length);
+                    maxSizeReached = true;
+                }
             }
         }
 

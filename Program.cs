@@ -11,7 +11,7 @@ namespace WindowsProg_A4
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             switch(ValidateCmdLineArgs(args))
             {
@@ -22,17 +22,69 @@ namespace WindowsProg_A4
 
                     if (checkResult == 0)
                     {
-                        Console.WriteLine("Leaving.\n");
                         return;
                     }
                     else if (checkResult == 1)
                     {
-                        Console.WriteLine("Continuing.\n");
-                        return;
+                        try
+                        {
+                            File.CreateText(args[0]);
+                        }
+                        catch (IOException e)
+                        {
+                            Console.WriteLine("Exception caught: {0}\n", e);
+                            return;
+                        }
+                        finally
+                        {
+                            Console.WriteLine("File created.\n");
+                        }
                     }
-                    return;
+                    else if (checkResult == 2)
+                    {
+                        try
+                        {
+                            File.WriteAllText(args[0], string.Empty);
+                        }
+                        catch (IOException e)
+                        {
+                            Console.WriteLine("Exception caught: {0}\n", e);
+                            return;
+                        }
+                        finally
+                        {
+                            Console.WriteLine("File overwritten.\n");
+                        }
+                    }
+                    break;
                 default:
                     return;
+            }
+
+            List<Task> writingTasks = new List<Task>();
+            for (int i = 0; i < 25; i++)
+            {
+                writingTasks.Add(WriteToFile(args[0]));
+            }
+        }
+
+
+
+        static async Task WriteToFile(string fileName)
+        {
+            string data = Guid.NewGuid().ToString();
+
+            try
+            {
+                using (StreamWriter sw = File.AppendText(fileName))
+                {
+                    await sw.WriteLineAsync(data);
+                }
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine("Exception caught: {0}\n", e);
+                return;
             }
         }
 
@@ -108,7 +160,7 @@ namespace WindowsProg_A4
             }
             else if (userChoice == 1)
             {
-                return 1;
+                return 2;
             }
             else if (userChoice == 2)
             {

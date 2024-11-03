@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace WindowsProg_A4
 {
@@ -17,7 +18,19 @@ namespace WindowsProg_A4
                 case 0:
                     return;
                 case 1:
+                    int checkFileResult = CheckFile(args[0]);
 
+                    if (checkFileResult == 0)
+                    {
+                        Console.WriteLine("Leaving.\n");
+                        return;
+                    }
+                    else if (checkFileResult == 1)
+                    {
+                        Console.WriteLine("Continuing.\n");
+                        return;
+                    }
+                    return;
                 default:
                     return;
             }
@@ -56,6 +69,53 @@ namespace WindowsProg_A4
                 }
             }
             return 1;
+        }
+
+        static int CheckFile(string fileName)
+        {
+            int userChoice = 0;
+            bool fileExists = false;
+
+            try
+            {
+                fileExists = File.Exists(fileName);
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine("Exception caught: {0}\n", e);
+                return 0;
+            }
+            finally
+            {
+                if (fileExists)
+                {
+                    Console.WriteLine("The " + fileName + " file already exists in the current directory. Would you like to overrwrite it?\n");
+                    Console.WriteLine("\t1. Yes\n\t2. No\nEnter the number corresponding to your choice:");
+                    string input = Console.ReadLine();
+                    Int32.TryParse(input, out userChoice);
+                    while (userChoice != 1 && userChoice != 2)
+                    {
+                        Console.WriteLine("Error: Please enter a number corresponding to the menu choices.\n");
+                        input = Console.ReadLine();
+                        Int32.TryParse(input, out userChoice);
+                    }
+                }
+            }
+
+            if (!fileExists)
+            {
+                return 1;
+            }
+            else if (userChoice == 1)
+            {
+                return 1;
+            }
+            else if (userChoice == 2)
+            {
+                return 0;
+            }
+
+            return -1;
         }
 
         static void Usage()

@@ -18,14 +18,14 @@ namespace WindowsProg_A4
                 case 0:
                     return;
                 case 1:
-                    int checkFileResult = CheckFile(args[0]);
+                    int checkResult = CheckFile(args[0]);
 
-                    if (checkFileResult == 0)
+                    if (checkResult == 0)
                     {
                         Console.WriteLine("Leaving.\n");
                         return;
                     }
-                    else if (checkFileResult == 1)
+                    else if (checkResult == 1)
                     {
                         Console.WriteLine("Continuing.\n");
                         return;

@@ -109,18 +109,23 @@ namespace WindowsProg_A4
         static async Task WriteToFile(string fileName)
         {
             string data = Guid.NewGuid().ToString();
+            StreamWriter sw = null;
 
             try
             {
-                using (StreamWriter sw = File.AppendText(fileName))
-                {
-                    await sw.WriteLineAsync(data);
-                }
+                sw = File.AppendText(fileName);
             }
             catch (IOException e)
             {
                 Console.WriteLine("Exception caught: {0}\n", e);
                 return;
+            }
+            finally
+            {
+                using (sw)
+                {
+                    await sw.WriteLineAsync(data);
+                }
             }
         }
 

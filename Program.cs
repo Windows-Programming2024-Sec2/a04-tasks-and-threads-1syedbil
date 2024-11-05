@@ -28,7 +28,7 @@ namespace WindowsProg_A4
                     {
                         try
                         {
-                            using (File.CreateText(args[0])) { }
+                            File.WriteAllText(args[0], string.Empty);
                         }
                         catch (IOException e)
                         {

@@ -235,6 +235,7 @@ namespace WindowsProg_A4
                     Console.WriteLine("\nThe " + fileName + " file already exists in the current directory. Would you like to overrwrite it?\n");
                     Console.WriteLine("\t1. Yes\n\t2. No\n\nEnter the number corresponding to your choice:");
                     string input = Console.ReadLine();
+                    Console.WriteLine();
                     Int32.TryParse(input, out userChoice);
                     while (userChoice != 1 && userChoice != Constants.TWO)
                     {
